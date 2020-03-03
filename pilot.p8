@@ -8,6 +8,7 @@ function _init()
   sprite = 0
  }
  lasers = {}
+ walls = {}
 end
 
 function _update()
@@ -15,12 +16,20 @@ function _update()
  if btn(1) then player.x+=2 end
  if btn(2) then player.y-=2 end
  if btn(3) then player.y+=2 end
- if btnp(4) then create_laser(player.x + 3, player.y - 3) end
+ if btnp(4) then create_laser(player.x, player.y) end
+ if btnp(5) then create_wall() end
 
  for laser in all(lasers) do
   laser.y -= 3
   if laser.y < -10 then
    del(lasers, laser)
+  end
+ end
+ for wall in all(walls) do
+  wall.y1 += 3
+  wall.y2 += 3
+  if wall.y2 > 138 then
+   del(walls, wall)
   end
  end
 end
@@ -31,14 +40,38 @@ function _draw()
  for laser in all(lasers) do
   sspr(4,8,1,6,laser.x,laser.y)
  end
+ for wall in all(walls) do
+  rectfill(wall.x1,wall.y1,wall.x2,wall.y2,wall.col)
+  rectfill(wall.x3,wall.y1,wall.x4,wall.y2,wall.col)
+ end
+
+ rect(0,0,127,127,8) --border
 end
 
 function create_laser(player_x, player_y)
- laser = {
-  x = player_x,
-  y = player_y
+ laser_left = {
+  x = player_x + 1,
+  y = player_y - 3
  }
- add(lasers, laser)
+ laser_right = {
+  x = player_x + 6,
+  y = player_y - 3
+ }
+ add(lasers, laser_left)
+ add(lasers, laser_right)
+end
+
+function create_wall()
+ wall = {
+  x1 = 1,
+  x2 = 10,
+  x3 = 35,
+  x4 = 127,
+  y1 = 1,
+  y2 = 4,
+  col = 3 
+ }
+ add(walls, wall)
 end
 
 
