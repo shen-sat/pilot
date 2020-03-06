@@ -9,12 +9,6 @@ function _init()
   height = 7,
   sprite = 0
  }
- dummy_wall = {
-  x = 20,
-  y = 20,
-  width =20,
-  height = 20,  
- }
  lasers = {}
  walls = {}
  bang = false
@@ -39,28 +33,28 @@ function _update()
   if wall.y > 138 then
    del(walls, wall)
   end
+  wall_collision(player, wall)
  end
- wall_collision(player, dummy_wall)
-
 end
 
 function _draw()
 	cls()
+ rect(0,0,127,127,8) --border
  if bang then
-  print('hello', 105, 120,7)
+  print('crash', 105, 120,7)
  end
  
  spr(player.sprite,player.x,player.y)
+ 
  for laser in all(lasers) do
   sspr(4,8,1,6,laser.x,laser.y)
  end
+ 
  for wall in all(walls) do
-  rectfill(wall.x,wall.y,wall.x + wall.width,wall.y + wall.height,wall.col)
+  rectfill(wall.x,wall.y,wall.x + wall.width - 1,wall.y + wall.height - 1,wall.col)
  end
 
- rectfill(dummy_wall.x,dummy_wall.y,dummy_wall.x + dummy_wall.width -1,dummy_wall.y + dummy_wall.height -1,7)
-
- rect(0,0,127,127,8) --border
+ 
 end
 
 function create_laser(player_x, player_y)
@@ -78,17 +72,17 @@ end
 
 function create_wall()
  wall_one = {
-  x = 1,
-  y = 1,
+  x = 0,
+  y = 0,
   width = 10,
-  height = 4,
+  height = 5,
   col = 3 
  }
  wall_two = {
-  x = 35,
+  x = 30,
   y = 1,
-  width = 91,
-  height = 4,
+  width = 98,
+  height = 5,
   col = 3
  }
  add(walls, wall_one)
@@ -96,6 +90,7 @@ function create_wall()
 end
 
 function wall_collision(player, wall)
+ bang = false
  x_1 = player.x
  x_2 = player.x + player.width
  y_1 = player.y
@@ -108,14 +103,12 @@ function wall_collision(player, wall)
 
  x_points = { x_1, x_2 }
  y_points = { y_1, y_2 }
-
- bang = false  
+  
  for x_point in all(x_points) do
   if x_point > wall_x_1 and x_point < wall_x_2 then
    for y_point in all(y_points) do
     if y_point > wall_y_1 and y_point < wall_y_2 then
      bang = true
-     return
     end
    end
   end
