@@ -3,19 +3,28 @@ version 18
 __lua__
 function _init()
  player = {
-  x = 10,
-  y = 10,
+  x = 40,
+  y = 40,
+  width = 8,
+  height = 7,
   sprite = 0
+ }
+ dummy_wall = {
+  x = 20,
+  y = 20,
+  width =20,
+  height = 20,  
  }
  lasers = {}
  walls = {}
+ bang = false
 end
 
 function _update()
- if btn(0) then player.x-=2 end
- if btn(1) then player.x+=2 end
- if btn(2) then player.y-=2 end
- if btn(3) then player.y+=2 end
+ if btn(0) then player.x-=1 end
+ if btn(1) then player.x+=1 end
+ if btn(2) then player.y-=1 end
+ if btn(3) then player.y+=1 end
  if btnp(4) then create_laser(player.x, player.y) end
  if btnp(5) then create_wall() end
 
@@ -26,24 +35,30 @@ function _update()
   end
  end
  for wall in all(walls) do
-  wall.y1 += 3
-  wall.y2 += 3
-  if wall.y2 > 138 then
+  wall.y += 3
+  if wall.y > 138 then
    del(walls, wall)
   end
  end
+ wall_collision(player, dummy_wall)
+
 end
 
 function _draw()
 	cls()
+ if bang then
+  print('hello', 105, 120,7)
+ end
+ 
  spr(player.sprite,player.x,player.y)
  for laser in all(lasers) do
   sspr(4,8,1,6,laser.x,laser.y)
  end
  for wall in all(walls) do
-  rectfill(wall.x1,wall.y1,wall.x2,wall.y2,wall.col)
-  rectfill(wall.x3,wall.y1,wall.x4,wall.y2,wall.col)
+  rectfill(wall.x,wall.y,wall.x + wall.width,wall.y + wall.height,wall.col)
  end
+
+ rectfill(dummy_wall.x,dummy_wall.y,dummy_wall.x + dummy_wall.width -1,dummy_wall.y + dummy_wall.height -1,7)
 
  rect(0,0,127,127,8) --border
 end
@@ -62,29 +77,66 @@ function create_laser(player_x, player_y)
 end
 
 function create_wall()
- wall = {
-  x1 = 1,
-  x2 = 10,
-  x3 = 35,
-  x4 = 127,
-  y1 = 1,
-  y2 = 4,
+ wall_one = {
+  x = 1,
+  y = 1,
+  width = 10,
+  height = 4,
   col = 3 
  }
- add(walls, wall)
+ wall_two = {
+  x = 35,
+  y = 1,
+  width = 91,
+  height = 4,
+  col = 3
+ }
+ add(walls, wall_one)
+ add(walls, wall_two)
+end
+
+function wall_collision(player, wall)
+ x_1 = player.x
+ x_2 = player.x + player.width
+ y_1 = player.y
+ y_2 = player.y + player.height 
+
+ wall_x_1 = wall.x
+ wall_x_2 = wall.x + wall.width
+ wall_y_1 = wall.y
+ wall_y_2 = wall.y + wall.height
+
+ x_points = { x_1, x_2 }
+ y_points = { y_1, y_2 }
+
+ bang = false  
+ for x_point in all(x_points) do
+  if x_point > wall_x_1 and x_point < wall_x_2 then
+   for y_point in all(y_points) do
+    if y_point > wall_y_1 and y_point < wall_y_2 then
+     bang = true
+     return
+    end
+   end
+  end
+ end
+
+
 end
 
 
 
+
+
 __gfx__
-00000000000000000b3000298028013009a002e1d101000b33000000029900013006100000000000000000000000000000000000000000000000000000000000
-000dd000000dd000b300029a228e03b09aa02ef0160c00bbb0030002999a0013b00d6100001ddddd0dddddddddddddddddddd511001ddddd0ddddddddddddddd
-0d17c1500017c1d033bb0499088813b49190effd1d6c103bb00b30299aaa013bb000d6d601d7777d077777777777677777776d5001d777770777777777776777
-dd27c1550557c2dd0b1b041402021239a9a0f1e6d661c10330bb3099a9aa0333bd100d660d77666d0666666666666666666666501d7766660666666666666666
-d6dcc1d505dcc26d0b8b02492812013a90a02ef612dc0c010bbbb29aaa9913bb3ddd16d60d766ddd0dddddddddddddddddddddd01d766ddd0ddddddddddddddd
-d6d511d505d5216d3b330000880831090000e1f6166cc000bb1b399aaaaa333bb16ddd210d76dd11011111313b3bbbbbbbbb3b301d76dd110111111111111111
-1d5dd551015dd5d1b1000940820030049040e1e1d10cc1003b11b44009aa3213b66106220d76d1110000000000000000000000001db6d1110000000000000000
-01100110001001103bb004202820130040002e201d0c100033b8b441809a128136600d660d76d1100000000000000000000000001d76d1100000000000000000
+000dd000000000000b3000298028013009a002e1d101000b33000000029900013006100000000000000000000000000000000000000000000000000000000000
+0d17c150000dd000b300029a228e03b09aa02ef0160c00bbb0030002999a0013b00d6100001ddddd0dddddddddddddddddddd511001ddddd0ddddddddddddddd
+dd27c1550017c1d033bb0499088813b49190effd1d6c103bb00b30299aaa013bb000d6d601d7777d077777777777677777776d5001d777770777777777776777
+d6dcc1d50557c2dd0b1b041402021239a9a0f1e6d661c10330bb3099a9aa0333bd100d660d77666d0666666666666666666666501d7766660666666666666666
+d6d511d505dcc26d0b8b02492812013a90a02ef612dc0c010bbbb29aaa9913bb3ddd16d60d766ddd0dddddddddddddddddddddd01d766ddd0ddddddddddddddd
+1d5dd55105d5216d3b330000880831090000e1f6166cc000bb1b399aaaaa333bb16ddd210d76dd11011111313b3bbbbbbbbb3b301d76dd110111111111111111
+01100110015dd5d1b1000940820030049040e1e1d10cc1003b11b44009aa3213b66106220d76d1110000000000000000000000001db6d1110000000000000000
+00000000001001103bb004202820130040002e201d0c100033b8b441809a128136600d660d76d1100000000000000000000000001d76d1100000000000000000
 1771707707c00aa0b30000290028013009a002e1d1000101033bb494114411221666d100000000000666d6d00666d6d00666d6d0001000000666d6d000000000
 9a79b0bb0cc007a0b300029a228e03b09aa02ef01600c003b0311249449913b33d66d0000076d110677111dd677111dd677111dd13b6d110677000dd0000dda0
 899800000110022033bb0499888813b49190effd1d6c103bbb01322444441331316d10000076d110677cc11d677bb11d6779911d13b6d1106700400d00055080
