@@ -15,25 +15,29 @@ function _init()
 end
 
 function _update()
- if btn(0) then player.x-=1 end
- if btn(1) then player.x+=1 end
- if btn(2) then player.y-=1 end
- if btn(3) then player.y+=1 end
+ if btn(0) then player.x-=2 end
+ if btn(1) then player.x+=2 end
+ if btn(2) then player.y-=2 end
+ if btn(3) then player.y+=2 end
  if btnp(4) then create_laser(player.x, player.y) end
  if btnp(5) then create_wall() end
 
+ bang = false
+ 
  for laser in all(lasers) do
   laser.y -= 3
   if laser.y < -10 then
    del(lasers, laser)
   end
  end
- for wall in all(walls) do
-  wall.y += 3
-  if wall.y > 138 then
-   del(walls, wall)
+ for wall in all(walls) do 
+  if time() > wall.start then
+   wall.y += 3
+   if wall.y > 138 then
+    del(walls, wall)
+   end
+   wall_collision(player, wall)
   end
-  wall_collision(player, wall)
  end
 end
 
@@ -71,26 +75,32 @@ function create_laser(player_x, player_y)
 end
 
 function create_wall()
+ gap = 20
+ wall_one_width = flr(rnd(128 - gap))
+ wall_two_x = wall_one_width + 20
+ wall_two_width = 128-wall_two_x
+
  wall_one = {
   x = 0,
   y = 0,
-  width = 10,
+  width = wall_one_width,
   height = 5,
-  col = 3 
+  col = 3,
+  start = time() + 1
  }
  wall_two = {
-  x = 30,
+  x = wall_two_x,
   y = 1,
-  width = 98,
+  width = wall_two_width,
   height = 5,
-  col = 3
+  col = 3,
+  start = time() + 1
  }
  add(walls, wall_one)
  add(walls, wall_two)
 end
 
 function wall_collision(player, wall)
- bang = false
  x_1 = player.x
  x_2 = player.x + player.width
  y_1 = player.y
@@ -113,8 +123,6 @@ function wall_collision(player, wall)
    end
   end
  end
-
-
 end
 
 
