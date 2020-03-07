@@ -3,8 +3,8 @@ version 18
 __lua__
 function _init()
  player = {
-  x = 40,
-  y = 40,
+  x = 60,
+  y = 110,
   width = 8,
   height = 7,
   sprite = 0
@@ -12,17 +12,37 @@ function _init()
  lasers = {}
  walls = {}
  bang = false
+ wall_time = 3
+ wall_time_pause = 2.5
+ wall_counter = 0
+ wall_gap = 20
+ difficulty = 0
 end
 
 function _update()
- if btn(0) then player.x-=2 end
- if btn(1) then player.x+=2 end
- if btn(2) then player.y-=2 end
- if btn(3) then player.y+=2 end
+ if btn(0) then player.x-=3 end
+ if btn(1) then player.x+=3 end
+ if btn(2) then player.y-=3 end
+ if btn(3) then player.y+=3 end
  if btnp(4) then create_laser(player.x, player.y) end
- if btnp(5) then create_wall() end
 
  bang = false
+
+ if (difficulty/6) > 5 then
+  difficulty = 0
+  wall_time_pause = 2.5
+  wall_counter = 0
+ end
+ if time() > wall_time then
+  create_wall()
+  if wall_counter > 3 then
+   difficulty += 6
+   -- wall_gap += 1
+   wall_time_pause -= (wall_time_pause * 0.2)
+   wall_counter = 0
+  end
+  wall_time += wall_time_pause
+ end
  
  for laser in all(lasers) do
   laser.y -= 3
@@ -35,6 +55,7 @@ function _update()
    wall.y += 3
    if wall.y > 138 then
     del(walls, wall)
+    wall_counter += 0.5
    end
    wall_collision(player, wall)
   end
@@ -44,9 +65,10 @@ end
 function _draw()
 	cls()
  rect(0,0,127,127,8) --border
- if bang then
-  print('crash', 105, 120,7)
- end
+ -- if bang then
+ --  print('crash', 105, 120,7)
+ -- end
+ print(difficulty/6, 105, 120, 7)
  
  spr(player.sprite,player.x,player.y)
  
@@ -75,9 +97,9 @@ function create_laser(player_x, player_y)
 end
 
 function create_wall()
- gap = 20
- wall_one_width = flr(rnd(128 - gap))
- wall_two_x = wall_one_width + 20
+ 
+ wall_one_width = flr(rnd(128 - wall_gap - difficulty)) + difficulty
+ wall_two_x = wall_one_width + wall_gap
  wall_two_width = 128-wall_two_x
 
  wall_one = {
