@@ -12,13 +12,15 @@ function _init()
  lasers = {}
  walls = {}
  bang = false
- wall_time = 3
- wall_time_pause = 2.5
- wall_counter = 0
+ barrier_time = 3
+ barrier_time_modifier = 2.5
+ barrier_time_pause = 1
+ barrier_counter = 0
  wall_gap = 20
+ wall_size_modifier = 0
  difficulty = 0
 end
-
+--------------------------------------------------------------------------update
 function _update()
  if btn(0) then player.x-=3 end
  if btn(1) then player.x+=3 end
@@ -28,21 +30,23 @@ function _update()
 
  bang = false
 
- if (difficulty/6) > 5 then
-  difficulty = 0
-  wall_time_pause = 2.5
-  wall_counter = 0
- end
- if time() > wall_time then
-  create_wall()
-  if wall_counter > 3 then
-   difficulty += 6
-   -- wall_gap += 1
-   wall_time_pause -= (wall_time_pause * 0.2)
-   wall_counter = 0
-  end
-  wall_time += wall_time_pause
- end
+ stage_one()
+
+ -- if (difficulty > 5) then
+ --  difficulty = 0
+ --  barrier_time_pause = 2.5
+ --  wall_counter = 0
+ -- end
+ -- if time() > barrier_time then
+ --  create_barrier()
+ --  if wall_counter > 3 then
+ --   difficulty += 6
+ --   -- wall_gap += 1
+ --   barrier_time_pause -= (barrier_time_pause * 0.2)
+ --   wall_counter = 0
+ --  end
+ --  barrier_time += barrier_time_pause
+ -- end
  
  for laser in all(lasers) do
   laser.y -= 3
@@ -55,20 +59,26 @@ function _update()
    wall.y += 3
    if wall.y > 138 then
     del(walls, wall)
-    wall_counter += 0.5
+    barrier_counter += 0.5
    end
    wall_collision(player, wall)
   end
  end
+ if barrier_counter == 3 then
+  barrier_counter = 0
+  difficulty += 1
+  wall_size_modifier += 5
+  barrier_time_modifier = barrier_time_modifier * 0.9 
+ end
 end
-
+--------------------------------------------------------------------------draw
 function _draw()
 	cls()
  rect(0,0,127,127,8) --border
  -- if bang then
  --  print('crash', 105, 120,7)
  -- end
- print(difficulty/6, 105, 120, 7)
+ print(difficulty, 105, 120, 7)
  
  spr(player.sprite,player.x,player.y)
  
@@ -78,11 +88,9 @@ function _draw()
  
  for wall in all(walls) do
   rectfill(wall.x,wall.y,wall.x + wall.width - 1,wall.y + wall.height - 1,wall.col)
- end
-
- 
+ end 
 end
-
+--------------------------------------------------------------------------other
 function create_laser(player_x, player_y)
  laser_left = {
   x = player_x + 1,
@@ -96,9 +104,10 @@ function create_laser(player_x, player_y)
  add(lasers, laser_right)
 end
 
-function create_wall()
+function create_barrier()
  
- wall_one_width = flr(rnd(128 - wall_gap - difficulty)) + difficulty
+ wall_one_width = flr(rnd(128 - wall_gap - wall_size_modifier)) + wall_size_modifier
+ -- wall_one_width = flr(rnd(128 - wall_gap))
  wall_two_x = wall_one_width + wall_gap
  wall_two_width = 128-wall_two_x
 
@@ -108,7 +117,7 @@ function create_wall()
   width = wall_one_width,
   height = 5,
   col = 3,
-  start = time() + 1
+  start = time() + barrier_time_pause
  }
  wall_two = {
   x = wall_two_x,
@@ -116,7 +125,7 @@ function create_wall()
   width = wall_two_width,
   height = 5,
   col = 3,
-  start = time() + 1
+  start = time() + barrier_time_pause
  }
  add(walls, wall_one)
  add(walls, wall_two)
@@ -144,6 +153,13 @@ function wall_collision(player, wall)
     end
    end
   end
+ end
+end
+
+function stage_one()
+ if time() > barrier_time then
+  create_barrier()
+  barrier_time += barrier_time_modifier
  end
 end
 
