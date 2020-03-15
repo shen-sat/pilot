@@ -9,7 +9,6 @@ function _init()
   height = 7,
   sprite = 0
  }
- lasers = {}
  walls = {}
  bang = false
  barrier_time = 3
@@ -26,34 +25,12 @@ function _update()
  if btn(1) then player.x+=3 end
  if btn(2) then player.y-=3 end
  if btn(3) then player.y+=3 end
- if btnp(4) then create_laser(player.x, player.y) end
 
  bang = false
 
  stage_one()
-
- -- if (difficulty > 5) then
- --  difficulty = 0
- --  barrier_time_pause = 2.5
- --  wall_counter = 0
- -- end
- -- if time() > barrier_time then
- --  create_barrier()
- --  if wall_counter > 3 then
- --   difficulty += 6
- --   -- wall_gap += 1
- --   barrier_time_pause -= (barrier_time_pause * 0.2)
- --   wall_counter = 0
- --  end
- --  barrier_time += barrier_time_pause
- -- end
+ reset_stage()
  
- for laser in all(lasers) do
-  laser.y -= 3
-  if laser.y < -10 then
-   del(lasers, laser)
-  end
- end
  for wall in all(walls) do 
   if time() > wall.start then
    wall.y += 3
@@ -68,46 +45,26 @@ function _update()
   barrier_counter = 0
   difficulty += 1
   wall_size_modifier += 5
-  barrier_time_modifier = barrier_time_modifier * 0.9 
+  barrier_time_modifier = barrier_time_modifier * 0.85 
  end
 end
 --------------------------------------------------------------------------draw
 function _draw()
 	cls()
  rect(0,0,127,127,8) --border
- -- if bang then
- --  print('crash', 105, 120,7)
- -- end
  print(difficulty, 105, 120, 7)
  
  spr(player.sprite,player.x,player.y)
- 
- for laser in all(lasers) do
-  sspr(4,8,1,6,laser.x,laser.y)
- end
  
  for wall in all(walls) do
   rectfill(wall.x,wall.y,wall.x + wall.width - 1,wall.y + wall.height - 1,wall.col)
  end 
 end
 --------------------------------------------------------------------------other
-function create_laser(player_x, player_y)
- laser_left = {
-  x = player_x + 1,
-  y = player_y - 3
- }
- laser_right = {
-  x = player_x + 6,
-  y = player_y - 3
- }
- add(lasers, laser_left)
- add(lasers, laser_right)
-end
 
 function create_barrier()
  
  wall_one_width = flr(rnd(128 - wall_gap - wall_size_modifier)) + wall_size_modifier
- -- wall_one_width = flr(rnd(128 - wall_gap))
  wall_two_x = wall_one_width + wall_gap
  wall_two_width = 128-wall_two_x
 
@@ -160,6 +117,17 @@ function stage_one()
  if time() > barrier_time then
   create_barrier()
   barrier_time += barrier_time_modifier
+ end
+end
+
+function reset_stage()
+ if difficulty > 5 then
+  barrier_time = time() + 3
+  barrier_time_modifier = 2.5
+  barrier_counter = 0
+  wall_size_modifier = 0
+  barrier_counter = 0
+  difficulty = 0
  end
 end
 
