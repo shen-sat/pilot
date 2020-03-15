@@ -15,7 +15,7 @@ function _init()
  barrier_time_modifier = 2.5
  barrier_time_pause = 1
  barrier_counter = 0
- wall_gap = 20
+ wall_gap = 25
  wall_size_modifier = 0
  difficulty = 0
 end
@@ -29,14 +29,12 @@ function _update()
  bang = false
 
  stage_one()
- reset_stage()
  
- for wall in all(walls) do 
+ for wall in all(walls) do
   if time() > wall.start then
    wall.y += 3
    if wall.y > 138 then
     del(walls, wall)
-    barrier_counter += 0.5
    end
    wall_collision(player, wall)
   end
@@ -47,12 +45,14 @@ function _update()
   wall_size_modifier += 5
   barrier_time_modifier = barrier_time_modifier * 0.85 
  end
+
+ reset_stage()
 end
 --------------------------------------------------------------------------draw
 function _draw()
 	cls()
  rect(0,0,127,127,8) --border
- print(difficulty, 105, 120, 7)
+ print(barrier_counter, 105, 120, 7)
  
  spr(player.sprite,player.x,player.y)
  
@@ -63,8 +63,8 @@ end
 --------------------------------------------------------------------------other
 
 function create_barrier()
- 
- wall_one_width = flr(rnd(128 - wall_gap - wall_size_modifier)) + wall_size_modifier
+ barrier_counter += 1
+ wall_one_width = flr(rnd(128 - wall_gap))
  wall_two_x = wall_one_width + wall_gap
  wall_two_width = 128-wall_two_x
 
@@ -124,7 +124,6 @@ function reset_stage()
  if difficulty > 5 then
   barrier_time = time() + 3
   barrier_time_modifier = 2.5
-  barrier_counter = 0
   wall_size_modifier = 0
   barrier_counter = 0
   difficulty = 0
