@@ -2,138 +2,192 @@ pico-8 cartridge // http://www.pico-8.com
 version 18
 __lua__
 function _init()
- player = {
-  x = 60,
-  y = 110,
-  width = 8,
-  height = 7,
-  sprite = 0
- }
- walls = {}
- bang = false
- barrier_time = 3
- barrier_time_modifier = 2.5
- barrier_time_pause = 1
- barrier_counter = 0
- wall_gap = 25
- wall_size_modifier = 0
- difficulty = 0
+	game = {}
+	show_menu()
+
+ -- player = {
+ --  x = 60,
+ --  y = 110,
+ --  width = 8,
+ --  height = 7,
+ --  sprite = 0
+ -- }
+ -- walls = {}
+ -- bang = false
+ -- barrier_time = 3
+ -- barrier_time_modifier = 2.5
+ -- barrier_time_pause = 1
+ -- barrier_counter = 0
+ -- wall_gap = 25
+ -- wall_size_modifier = 0
+ -- difficulty = 0
 end
 --------------------------------------------------------------------------update
 function _update()
- if btn(0) then player.x-=3 end
- if btn(1) then player.x+=3 end
- if btn(2) then player.y-=3 end
- if btn(3) then player.y+=3 end
-
- bang = false
-
- stage_one()
- 
- for wall in all(walls) do
-  if time() > wall.start then
-   wall.y += 3
-   if wall.y > 138 then
-    del(walls, wall)
-   end
-   wall_collision(player, wall)
-  end
- end
- if barrier_counter == 3 then
-  barrier_counter = 0
-  difficulty += 1
-  wall_size_modifier += 5
-  barrier_time_modifier = barrier_time_modifier * 0.85 
- end
-
- reset_stage()
+	game.update()
 end
+ -- if btn(0) then player.x-=3 end
+ -- if btn(1) then player.x+=3 end
+ -- if btn(2) then player.y-=3 end
+ -- if btn(3) then player.y+=3 end
+
+ -- bang = false
+
+ -- stage_one()
+ 
+ -- for wall in all(walls) do
+ --  if time() > wall.start then
+ --   wall.y += 3
+ --   if wall.y > 138 then
+ --    del(walls, wall)
+ --   end
+ --   wall_collision(player, wall)
+ --  end
+ -- end
+ -- if barrier_counter == 3 then
+ --  barrier_counter = 0
+ --  difficulty += 1
+ --  wall_size_modifier += 5
+ --  barrier_time_modifier = barrier_time_modifier * 0.85 
+ -- end
+
+ -- reset_stage()
+
 --------------------------------------------------------------------------draw
 function _draw()
-	cls()
- rect(0,0,127,127,8) --border
- print(barrier_counter, 105, 120, 7)
+	game.draw()
+	-- cls()
+ -- rect(0,0,127,127,8) --border
+ -- print(barrier_counter, 105, 120, 7)
  
- spr(player.sprite,player.x,player.y)
+ -- spr(player.sprite,player.x,player.y)
  
- for wall in all(walls) do
-  rectfill(wall.x,wall.y,wall.x + wall.width - 1,wall.y + wall.height - 1,wall.col)
- end 
+ -- for wall in all(walls) do
+ --  rectfill(wall.x,wall.y,wall.x + wall.width - 1,wall.y + wall.height - 1,wall.col)
+ -- end 
 end
 --------------------------------------------------------------------------other
 
-function create_barrier()
- barrier_counter += 1
- wall_one_width = flr(rnd(128 - wall_gap))
- wall_two_x = wall_one_width + wall_gap
- wall_two_width = 128-wall_two_x
+-- function create_barrier()
+--  barrier_counter += 1
+--  wall_one_width = flr(rnd(128 - wall_gap))
+--  wall_two_x = wall_one_width + wall_gap
+--  wall_two_width = 128-wall_two_x
 
- wall_one = {
-  x = 0,
-  y = 0,
-  width = wall_one_width,
-  height = 5,
-  col = 3,
-  start = time() + barrier_time_pause
- }
- wall_two = {
-  x = wall_two_x,
-  y = 1,
-  width = wall_two_width,
-  height = 5,
-  col = 3,
-  start = time() + barrier_time_pause
- }
- add(walls, wall_one)
- add(walls, wall_two)
-end
+--  wall_one = {
+--   x = 0,
+--   y = 0,
+--   width = wall_one_width,
+--   height = 5,
+--   col = 3,
+--   start = time() + barrier_time_pause
+--  }
+--  wall_two = {
+--   x = wall_two_x,
+--   y = 1,
+--   width = wall_two_width,
+--   height = 5,
+--   col = 3,
+--   start = time() + barrier_time_pause
+--  }
+--  add(walls, wall_one)
+--  add(walls, wall_two)
+-- end
 
-function wall_collision(player, wall)
- x_1 = player.x
- x_2 = player.x + player.width
- y_1 = player.y
- y_2 = player.y + player.height 
+-- function wall_collision(player, wall)
+--  x_1 = player.x
+--  x_2 = player.x + player.width
+--  y_1 = player.y
+--  y_2 = player.y + player.height 
 
- wall_x_1 = wall.x
- wall_x_2 = wall.x + wall.width
- wall_y_1 = wall.y
- wall_y_2 = wall.y + wall.height
+--  wall_x_1 = wall.x
+--  wall_x_2 = wall.x + wall.width
+--  wall_y_1 = wall.y
+--  wall_y_2 = wall.y + wall.height
 
- x_points = { x_1, x_2 }
- y_points = { y_1, y_2 }
+--  x_points = { x_1, x_2 }
+--  y_points = { y_1, y_2 }
   
- for x_point in all(x_points) do
-  if x_point > wall_x_1 and x_point < wall_x_2 then
-   for y_point in all(y_points) do
-    if y_point > wall_y_1 and y_point < wall_y_2 then
-     bang = true
-    end
-   end
-  end
- end
+--  for x_point in all(x_points) do
+--   if x_point > wall_x_1 and x_point < wall_x_2 then
+--    for y_point in all(y_points) do
+--     if y_point > wall_y_1 and y_point < wall_y_2 then
+--      bang = true
+--     end
+--    end
+--   end
+--  end
+-- end
+
+-- function stage_one()
+--  if time() > barrier_time then
+--   create_barrier()
+--   barrier_time += barrier_time_modifier
+--  end
+-- end
+
+-- function reset_stage()
+--  if difficulty > 5 then
+--   barrier_time = time() + 3
+--   barrier_time_modifier = 2.5
+--   wall_size_modifier = 0
+--   barrier_counter = 0
+--   difficulty = 0
+--  end
+-- end
+
+
+
+
+
+-->8
+--menu
+
+function show_menu()
+	game.update = menu_update
+	game.draw = menu_draw
 end
 
-function stage_one()
- if time() > barrier_time then
-  create_barrier()
-  barrier_time += barrier_time_modifier
- end
+function menu_update()
+	if btnp(5) then run_level() end
 end
 
-function reset_stage()
- if difficulty > 5 then
-  barrier_time = time() + 3
-  barrier_time_modifier = 2.5
-  wall_size_modifier = 0
-  barrier_counter = 0
-  difficulty = 0
- end
+function menu_draw()
+	cls()
+	print('press ❎ to start')
+end
+-->8
+--game
+
+function run_level()
+	game.update = level_update
+	game.draw = level_draw
 end
 
+function level_update()
+	if btnp(5) then shw_gme_ovr() end
+end
 
+function level_draw()
+	cls()
+	print('game running')
+end
+-->8
+--game over screen
 
+function shw_gme_ovr()
+	game.update = gme_ovr_upd
+	game.draw = gme_ovr_drw
+end
 
+function gme_ovr_upd()
+	if btnp(5) then show_menu() end
+end
 
+function gme_ovr_drw()
+	cls()
+	print('game over')
+end
 __gfx__
 000dd000000000000b3000298028013009a002e1d101000b33000000029900013006100000000000000000000000000000000000000000000000000000000000
 0d17c150000dd000b300029a228e03b09aa02ef0160c00bbb0030002999a0013b00d6100001ddddd0dddddddddddddddddddd511001ddddd0ddddddddddddddd
