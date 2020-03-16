@@ -5,143 +5,18 @@ function _init()
 	game = {}
 	show_menu()
 
- -- player = {
- --  x = 60,
- --  y = 110,
- --  width = 8,
- --  height = 7,
- --  sprite = 0
- -- }
- -- walls = {}
- -- bang = false
- -- barrier_time = 3
- -- barrier_time_modifier = 2.5
- -- barrier_time_pause = 1
- -- barrier_counter = 0
- -- wall_gap = 25
- -- wall_size_modifier = 0
- -- difficulty = 0
 end
---------------------------------------------------------------------------update
+
 function _update()
 	game.update()
 end
- -- if btn(0) then player.x-=3 end
- -- if btn(1) then player.x+=3 end
- -- if btn(2) then player.y-=3 end
- -- if btn(3) then player.y+=3 end
 
- -- bang = false
-
- -- stage_one()
- 
- -- for wall in all(walls) do
- --  if time() > wall.start then
- --   wall.y += 3
- --   if wall.y > 138 then
- --    del(walls, wall)
- --   end
- --   wall_collision(player, wall)
- --  end
- -- end
- -- if barrier_counter == 3 then
- --  barrier_counter = 0
- --  difficulty += 1
- --  wall_size_modifier += 5
- --  barrier_time_modifier = barrier_time_modifier * 0.85 
- -- end
-
- -- reset_stage()
-
---------------------------------------------------------------------------draw
 function _draw()
-	game.draw()
-	-- cls()
- -- rect(0,0,127,127,8) --border
- -- print(barrier_counter, 105, 120, 7)
- 
- -- spr(player.sprite,player.x,player.y)
- 
- -- for wall in all(walls) do
- --  rectfill(wall.x,wall.y,wall.x + wall.width - 1,wall.y + wall.height - 1,wall.col)
- -- end 
+	game.draw() 
 end
---------------------------------------------------------------------------other
-
--- function create_barrier()
---  barrier_counter += 1
---  wall_one_width = flr(rnd(128 - wall_gap))
---  wall_two_x = wall_one_width + wall_gap
---  wall_two_width = 128-wall_two_x
-
---  wall_one = {
---   x = 0,
---   y = 0,
---   width = wall_one_width,
---   height = 5,
---   col = 3,
---   start = time() + barrier_time_pause
---  }
---  wall_two = {
---   x = wall_two_x,
---   y = 1,
---   width = wall_two_width,
---   height = 5,
---   col = 3,
---   start = time() + barrier_time_pause
---  }
---  add(walls, wall_one)
---  add(walls, wall_two)
--- end
-
--- function wall_collision(player, wall)
---  x_1 = player.x
---  x_2 = player.x + player.width
---  y_1 = player.y
---  y_2 = player.y + player.height 
-
---  wall_x_1 = wall.x
---  wall_x_2 = wall.x + wall.width
---  wall_y_1 = wall.y
---  wall_y_2 = wall.y + wall.height
-
---  x_points = { x_1, x_2 }
---  y_points = { y_1, y_2 }
-  
---  for x_point in all(x_points) do
---   if x_point > wall_x_1 and x_point < wall_x_2 then
---    for y_point in all(y_points) do
---     if y_point > wall_y_1 and y_point < wall_y_2 then
---      bang = true
---     end
---    end
---   end
---  end
--- end
-
--- function stage_one()
---  if time() > barrier_time then
---   create_barrier()
---   barrier_time += barrier_time_modifier
---  end
--- end
-
--- function reset_stage()
---  if difficulty > 5 then
---   barrier_time = time() + 3
---   barrier_time_modifier = 2.5
---   wall_size_modifier = 0
---   barrier_counter = 0
---   difficulty = 0
---  end
--- end
-
-
-
-
 
 -->8
---menu
+--menu-----------------------------------
 
 function show_menu()
 	game.update = menu_update
@@ -157,34 +32,154 @@ function menu_draw()
 	print('press ❎ to start')
 end
 -->8
---game
+--game-----------------------------------
 
-function run_level()
+function run_level() 
+ player = {
+  x = 60,
+  y = 110,
+  width = 8,
+  height = 7,
+  sprite = 0
+ }
+ walls = {}
+ barrier_time = time() + 3
+ barrier_time_modifier = 2.5
+ barrier_time_pause = 1
+ barrier_counter = 0
+ wall_gap = 25
+ wall_size_modifier = 0
+ difficulty = 0
+ bang = false
+
 	game.update = level_update
 	game.draw = level_draw
 end
 
 function level_update()
-	if btnp(5) then shw_gme_ovr() end
+	if btn(0) then player.x-=3 end
+ if btn(1) then player.x+=3 end
+ if btn(2) then player.y-=3 end
+ if btn(3) then player.y+=3 end
+ 
+ stage_one()
+
+ for wall in all(walls) do
+  if time() > wall.start then
+   wall.y += 3
+   if wall.y > 138 then
+    del(walls, wall)
+   end
+   wall_collision(player, wall)
+  end
+ end
+ if barrier_counter == 3 then
+  barrier_counter = 0
+  difficulty += 1
+  wall_size_modifier += 5
+  barrier_time_modifier = barrier_time_modifier * 0.85 
+ end
+
+ function wall_collision(player, wall)
+  x_1 = player.x
+  x_2 = player.x + player.width
+  y_1 = player.y
+  y_2 = player.y + player.height 
+
+  wall_x_1 = wall.x
+  wall_x_2 = wall.x + wall.width
+  wall_y_1 = wall.y
+  wall_y_2 = wall.y + wall.height
+
+  x_points = { x_1, x_2 }
+  y_points = { y_1, y_2 }
+   
+  for x_point in all(x_points) do
+   if x_point > wall_x_1 and x_point < wall_x_2 then
+    for y_point in all(y_points) do
+     if y_point > wall_y_1 and y_point < wall_y_2 then
+      bang = true
+     end
+    end
+   end
+  end
+ end
+
+ reset_stage()
+ 
+	if btnp(5) then 
+  show_game_over()
+ end
 end
 
 function level_draw()
-	cls()
-	print('game running')
+ cls()
+ rect(0,0,127,127,8) --border
+ print(barrier_counter, 105, 120, 7)
+ 
+ spr(player.sprite,player.x,player.y)
+ 
+ for wall in all(walls) do
+  rectfill(wall.x,wall.y,wall.x + wall.width - 1,wall.y + wall.height - 1,wall.col)
+ end
 end
+
+function stage_one()
+	if time() > barrier_time then
+		create_barrier()
+		barrier_time += barrier_time_modifier
+	end
+end
+
+function create_barrier()
+ barrier_counter += 1
+ wall_one_width = flr(rnd(128 - wall_gap))
+ wall_two_x = wall_one_width + wall_gap
+ wall_two_width = 128-wall_two_x
+
+ wall_one = {
+  x = 0,
+  y = 0,
+  width = wall_one_width,
+  height = 5,
+  col = 3,
+  start = time() + barrier_time_pause
+ }
+ wall_two = {
+  x = wall_two_x,
+  y = 1,
+  width = wall_two_width,
+  height = 5,
+  col = 3,
+  start = time() + barrier_time_pause
+ }
+ add(walls, wall_one)
+ add(walls, wall_two)
+end
+
+function reset_stage()
+ if difficulty > 5 then
+  barrier_time = time() + 3
+  barrier_time_modifier = 2.5
+  wall_size_modifier = 0
+  barrier_counter = 0
+  difficulty = 0
+ end
+end
+
 -->8
---game over screen
+--game over screen-----------------------------------
 
-function shw_gme_ovr()
-	game.update = gme_ovr_upd
-	game.draw = gme_ovr_drw
+function show_game_over()
+	game.update = game_over_update
+	game.draw = game_over_draw
 end
 
-function gme_ovr_upd()
+function game_over_update()
 	if btnp(5) then show_menu() end
 end
 
-function gme_ovr_drw()
+function game_over_draw()
 	cls()
 	print('game over')
 end
