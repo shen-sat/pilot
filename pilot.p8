@@ -40,7 +40,11 @@ function run_level()
   y = 110,
   width = 8,
   height = 7,
-  sprite = 0
+  sprite = 0,
+  lives = 1,
+  hit = false,
+  hittable = true,
+  recovery_time = 3
  }
  walls = {}
  barrier_time = time() + 3
@@ -50,7 +54,6 @@ function run_level()
  wall_gap = 25
  wall_size_modifier = 0
  difficulty = 0
- bang = false
 
 	game.update = level_update
 	game.draw = level_draw
@@ -61,6 +64,7 @@ function level_update()
  if btn(1) then player.x+=3 end
  if btn(2) then player.y-=3 end
  if btn(3) then player.y+=3 end
+ if btnp(5) then show_game_over() end
  
  stage_one()
 
@@ -80,42 +84,18 @@ function level_update()
   barrier_time_modifier = barrier_time_modifier * 0.85 
  end
 
- function wall_collision(player, wall)
-  x_1 = player.x
-  x_2 = player.x + player.width
-  y_1 = player.y
-  y_2 = player.y + player.height 
-
-  wall_x_1 = wall.x
-  wall_x_2 = wall.x + wall.width
-  wall_y_1 = wall.y
-  wall_y_2 = wall.y + wall.height
-
-  x_points = { x_1, x_2 }
-  y_points = { y_1, y_2 }
-   
-  for x_point in all(x_points) do
-   if x_point > wall_x_1 and x_point < wall_x_2 then
-    for y_point in all(y_points) do
-     if y_point > wall_y_1 and y_point < wall_y_2 then
-      bang = true
-     end
-    end
-   end
-  end
- end
-
  reset_stage()
- 
-	if btnp(5) then 
-  show_game_over()
- end
+
+ check_player_hit()
+
+ check_player_lives()
 end
 
 function level_draw()
  cls()
  rect(0,0,127,127,8) --border
- print(barrier_counter, 105, 120, 7)
+ print(player.lives, 105, 120, 7)
+ print(player.hittable, 8, 120, 7)
  
  spr(player.sprite,player.x,player.y)
  
@@ -166,6 +146,49 @@ function reset_stage()
   difficulty = 0
  end
 end
+
+function wall_collision(player, wall)
+ x_1 = player.x
+ x_2 = player.x + player.width
+ y_1 = player.y
+ y_2 = player.y + player.height 
+
+ wall_x_1 = wall.x
+ wall_x_2 = wall.x + wall.width
+ wall_y_1 = wall.y
+ wall_y_2 = wall.y + wall.height
+
+ x_points = { x_1, x_2 }
+ y_points = { y_1, y_2 }
+  
+ for x_point in all(x_points) do
+  if x_point > wall_x_1 and x_point < wall_x_2 then
+   for y_point in all(y_points) do
+    if y_point > wall_y_1 and y_point < wall_y_2 then
+     if player.hittable == true then player.hit = true end
+    end
+   end
+  end
+ end
+end
+
+function check_player_hit()
+ if player.hit == true then
+  player.lives -= 1
+  player.hittable = false
+  time_to_recover = time() + player.recovery_time
+  player.hit = false 
+ end 
+ if player.hittable == false and time() > time_to_recover then
+  player.hittable = true
+  time_to_recover = 0
+ end
+end
+
+function check_player_lives()
+ if player.lives < 1 then show_game_over() end
+end
+
 
 -->8
 --game over screen-----------------------------------
