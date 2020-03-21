@@ -100,8 +100,8 @@ end
 function level_draw()
  cls()
  rect(0,0,127,127,8) --border
- print('lives: '.. player.lives, 90, 120, 7)
- print('wave: '..wave, 8, 120, 7)
+ print('lives:'.. player.lives, 90, 120, 7)
+ print('wave:'..wave, 8, 120, 7)
  
  spr(player.sprite,player.x,player.y)
  
@@ -216,7 +216,7 @@ end
 
 function game_over_draw()
 	cls()
-	print('you died!')
+	print('you died! at wave:'..wave)
  print('\n')
  print('press x to restart')
  print('press z to go to menu')
