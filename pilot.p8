@@ -29,7 +29,13 @@ end
 
 function menu_draw()
 	cls()
-	print('press ❎ to start')
+ color(3)
+ print('welcome to: the pilot')
+ print('\n')
+ print('press <- and -> to move')
+ print('avoid the walls')
+ print('\n')
+	print('press x to start')
 end
 -->8
 --game-----------------------------------
@@ -62,9 +68,6 @@ end
 function level_update()
 	if btn(0) then player.x-=3 end
  if btn(1) then player.x+=3 end
- if btn(2) then player.y-=3 end
- if btn(3) then player.y+=3 end
- if btnp(5) then show_game_over() end
  
  stage_one()
 
@@ -94,7 +97,7 @@ end
 function level_draw()
  cls()
  rect(0,0,127,127,8) --border
- print(player.lives, 105, 120, 7)
+ print('lives: '.. player.lives, 90, 120, 7)
  print(player.hittable, 8, 120, 7)
  
  spr(player.sprite,player.x,player.y)
@@ -199,12 +202,16 @@ function show_game_over()
 end
 
 function game_over_update()
-	if btnp(5) then show_menu() end
+	if btnp(5) then run_level() end
+ if btnp(4) then show_menu() end
 end
 
 function game_over_draw()
 	cls()
-	print('game over')
+	print('you died!')
+ print('\n')
+ print('press x to restart')
+ print('press z to go to menu')
 end
 __gfx__
 000dd000000000000b3000298028013009a002e1d101000b33000000029900013006100000000000000000000000000000000000000000000000000000000000
