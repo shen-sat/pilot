@@ -55,11 +55,14 @@ function run_level()
  walls = {}
  barrier_time = time() + 3
  barrier_time_modifier = 2.5
+ barrier_time_modifier_original = 2.5
  barrier_time_pause = 1
  barrier_counter = 0
  wall_gap = 25
  wall_size_modifier = 0
  difficulty = 0
+ wave = 1
+ next_wave = false
 
 	game.update = level_update
 	game.draw = level_draw
@@ -80,7 +83,7 @@ function level_update()
    wall_collision(player, wall)
   end
  end
- if barrier_counter == 3 then
+ if barrier_counter == 2 then
   barrier_counter = 0
   difficulty += 1
   wall_size_modifier += 5
@@ -98,7 +101,7 @@ function level_draw()
  cls()
  rect(0,0,127,127,8) --border
  print('lives: '.. player.lives, 90, 120, 7)
- print(player.hittable, 8, 120, 7)
+ print('wave: '..wave, 8, 120, 7)
  
  spr(player.sprite,player.x,player.y)
  
@@ -111,6 +114,10 @@ function stage_one()
 	if time() > barrier_time then
 		create_barrier()
 		barrier_time += barrier_time_modifier
+  if next_wave == true then
+   next_wave = false
+   wave += 1
+  end
 	end
 end
 
@@ -142,8 +149,9 @@ end
 
 function reset_stage()
  if difficulty > 5 then
+  next_wave = true
   barrier_time = time() + 3
-  barrier_time_modifier = 2.5
+  barrier_time_modifier = barrier_time_modifier_original * 0.67
   wall_size_modifier = 0
   barrier_counter = 0
   difficulty = 0
