@@ -59,7 +59,6 @@ function run_level()
  barrier_time_pause = 1
  barrier_counter = 0
  wall_gap = 25
- wall_size_modifier = 0
  difficulty = 0
  wave = 1
  next_wave = false
@@ -72,25 +71,13 @@ function level_update()
 	if btn(0) then player.x-=3 end
  if btn(1) then player.x+=3 end
  
- stage_one()
+ create_barriers()
 
- for wall in all(walls) do
-  if time() > wall.start then
-   wall.y += 3
-   if wall.y > 138 then
-    del(walls, wall)
-   end
-   wall_collision(player, wall)
-  end
- end
- if barrier_counter == 2 then
-  barrier_counter = 0
-  difficulty += 1
-  wall_size_modifier += 5
-  barrier_time_modifier = barrier_time_modifier * 0.85 
- end
+ move_walls()
+ 
+ check_and_increase_difficulty()
 
- reset_stage()
+ check_difficulty_and_reset_wave()
 
  check_player_hit()
 
@@ -110,7 +97,7 @@ function level_draw()
  end
 end
 
-function stage_one()
+function create_barriers()
 	if time() > barrier_time then
 		create_barrier()
 		barrier_time += barrier_time_modifier
@@ -147,12 +134,11 @@ function create_barrier()
  add(walls, wall_two)
 end
 
-function reset_stage()
+function check_difficulty_and_reset_wave()
  if difficulty > 5 then
   next_wave = true
   barrier_time = time() + 3
   barrier_time_modifier = barrier_time_modifier_original * 0.67
-  wall_size_modifier = 0
   barrier_counter = 0
   difficulty = 0
  end
@@ -198,6 +184,26 @@ end
 
 function check_player_lives()
  if player.lives < 1 then show_game_over() end
+end
+
+function move_walls()
+ for wall in all(walls) do
+  if time() > wall.start then
+   wall.y += 3
+   if wall.y > 138 then
+    del(walls, wall)
+   end
+   wall_collision(player, wall)
+  end
+ end
+end
+
+function check_and_increase_difficulty()
+ if barrier_counter == 2 then
+  barrier_counter = 0
+  difficulty += 1
+  barrier_time_modifier = barrier_time_modifier * 0.85 
+ end
 end
 
 
