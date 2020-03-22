@@ -63,6 +63,10 @@ function run_level()
  wave = 1
  next_wave = false
 
+ message_colors = {1,5,3,11}
+ message_color_index = 0
+ message_color_counter = 2
+
 	game.update = level_update
 	game.draw = level_draw
 end
@@ -76,6 +80,11 @@ function level_update()
  move_walls()
  
  check_and_increase_difficulty()
+
+ if difficulty > message_color_counter then
+  message_color_counter = difficulty
+  message_color_index += 1
+ end
 
  check_difficulty_and_reset_wave()
 
@@ -95,6 +104,8 @@ function level_draw()
  for wall in all(walls) do
   rectfill(wall.x,wall.y,wall.x + wall.width - 1,wall.y + wall.height - 1,wall.col)
  end
+
+ print('welcome back',64,64,message_colors[message_color_index])
 end
 
 function create_barriers()
