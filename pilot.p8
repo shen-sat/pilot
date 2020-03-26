@@ -61,6 +61,7 @@ function run_level()
  wall_gap = 25
  difficulty = 0
  wave = 1
+ prev_wave = wave
  next_wave = false
 
  message_colors = {1,5,3,11}
@@ -80,6 +81,11 @@ function level_update()
  move_walls()
  
  check_and_increase_difficulty()
+
+ if wave_increased() == true then
+  message_color_index = 0
+  message_color_counter = 2
+ end
 
  if difficulty > message_color_counter then
   message_color_counter = difficulty
@@ -106,6 +112,15 @@ function level_draw()
  end
 
  print('welcome back',64,64,message_colors[message_color_index])
+end
+
+function wave_increased()
+ if wave > prev_wave then
+  prev_wave = wave
+  return true
+ else
+  return false
+ end
 end
 
 function create_barriers()
