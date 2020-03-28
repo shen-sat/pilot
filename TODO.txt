@@ -1,0 +1,7 @@
+Get messages to shimmer
+Get message to dissappear after last barrier crosses over it
+Messages should exist behind barriers
+Messages should progress to next statement every wave
+Replace barriers with walls from Porklike
+
+-- DONE
