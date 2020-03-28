@@ -67,6 +67,7 @@ function run_level()
  message_colors = {1,5,3,11}
  message_color_index = 0
  message_color_counter = 2
+ message_on = false
 
 	game.update = level_update
 	game.draw = level_draw
@@ -111,7 +112,17 @@ function level_draw()
   rectfill(wall.x,wall.y,wall.x + wall.width - 1,wall.y + wall.height - 1,wall.col)
  end
 
- print('welcome back',64,64,message_colors[message_color_index])
+ flicker_message()
+end
+
+function flicker_message()
+ if message_on == false then
+  message_on = true
+  print('welcome back',64,64,message_colors[message_color_index])
+ else
+  message_on = false
+  print('welcome back',64,64,message_colors[message_color_index - 1])
+ end
 end
 
 function wave_increased()
