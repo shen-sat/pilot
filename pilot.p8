@@ -64,6 +64,13 @@ function run_level()
  prev_wave = wave
  next_wave = false
 
+ message_lines = {
+  "143 789 5643 94?",
+  "c43 you h64r 94?",
+  "c4n you h6ar u4?",
+  "can you hear us?",
+ }
+ message_lines_index = 1
  message_colors = {1,5,3,11}
  message_color_index = 0
  message_color_counter = 2
@@ -86,6 +93,7 @@ function level_update()
  if wave_increased() == true then
   message_color_index = 0
   message_color_counter = 2
+  message_lines_index += 1
  end
 
  if difficulty > message_color_counter then
@@ -95,7 +103,7 @@ function level_update()
 
  check_difficulty_and_reset_wave()
 
- check_player_hit()
+ -- check_player_hit()
 
  check_player_lives()
 end
@@ -118,10 +126,10 @@ end
 function display_messages()
  if message_on == false then
   message_on = true
-  print('welcome back',64,64,message_colors[message_color_index])
+  print(message_lines[message_lines_index],58,64,message_colors[message_color_index])
  else
   message_on = false
-  print('welcome back',64,64,message_colors[message_color_index - 1])
+  print(message_lines[message_lines_index],58,64,message_colors[message_color_index - 1])
  end
 end
 

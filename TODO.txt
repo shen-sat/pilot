@@ -1,7 +1,9 @@
-Messages should exist behind barriers
-Messages should progress to next statement every wave
+Win screen
 Get message to dissappear after last barrier crosses over it
 Replace barriers with walls from Porklike
+Intro - text from A Softer World	
 
 -- DONE
 Get messages to shimmer
+Messages should exist behind barriers
+Messages should progress to next statement every wave
