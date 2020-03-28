@@ -107,15 +107,15 @@ function level_draw()
  print('wave:'..wave, 8, 120, 7)
  
  spr(player.sprite,player.x,player.y)
+
+ display_messages()
  
  for wall in all(walls) do
   rectfill(wall.x,wall.y,wall.x + wall.width - 1,wall.y + wall.height - 1,wall.col)
  end
-
- flicker_message()
 end
 
-function flicker_message()
+function display_messages()
  if message_on == false then
   message_on = true
   print('welcome back',64,64,message_colors[message_color_index])
