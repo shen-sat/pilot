@@ -97,19 +97,10 @@ function level_update()
  create_barriers()
 
  move_walls()
- 
+
  check_and_increase_difficulty()
 
- if wave_increased() == true then
-  message_color_index = 0
-  message_color_counter = 2
-  message_lines_index += 1
- end
-
- if difficulty > message_color_counter then
-  message_color_counter = difficulty
-  message_color_index += 1
- end
+ manage_messages()
 
  check_difficulty_and_reset_wave()
 
@@ -130,7 +121,7 @@ end
 function level_draw()
  cls()
  rect(0,0,127,127,8) --border
- print('lives:'.. player.lives, 90, 120, 7)
+ print('lives:'..player.lives, 90, 120, 7)
  print('wave:'..wave, 8, 120, 7)
  
  spr(player.sprite,player.x,player.y)
@@ -277,8 +268,37 @@ function check_and_increase_difficulty()
  end
 end
 
+function manage_messages()
+ set_next_message_content_and_reset_color()
+
+ increase_message_color_index()
+
+ wipe_message_from_screen_as_last_barrier_passes()
+end
+
+function wipe_message_from_screen_as_last_barrier_passes()
+ if next_wave == true and #walls == 2 then
+  if walls[1].y > 64 then message_color_index = 0 end
+ end
+end
+
+function set_next_message_content_and_reset_color()
+ if wave_increased() == true then
+  message_color_index = 0
+  message_color_counter = 2
+  message_lines_index += 1
+ end
+end
+
+function increase_message_color_index()
+ if difficulty > message_color_counter then
+  message_color_counter = difficulty
+  message_color_index += 1
+ end
+end
+
 function check_win()
- if wave > 5 then
+ if wave > 1 then
   game.update = win_update
   game.draw = win_draw
  end
@@ -300,7 +320,7 @@ end
 
 function win_draw()
   cls()
-  print('win!')
+  print('win!', 90, 90, 7)
 end
 
 --game-over------------------------------------------------------------------------------------------
