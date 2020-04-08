@@ -1,7 +1,11 @@
-Win screen
 Get message to dissappear after last barrier crosses over it
 Replace barriers with walls from Porklike
-Intro - text from A Softer World	
+Intro - text from A Softer World
+Win state
+	- text from mission control
+	- ability to hyper jump
+Title screen
+
 
 -- DONE
 Get messages to shimmer
