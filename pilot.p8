@@ -46,7 +46,7 @@ end
 function run_level() 
  player = {
   x = 60,
-  y = 110,
+  y = 100,
   width = 8,
   height = 7,
   sprite = 0,
@@ -81,6 +81,9 @@ function run_level()
 
 	game.update = level_update
 	game.draw = level_draw
+
+ dialogue_blinker_start_time = 0
+ dialogue_blinker_increment_time = 1
 end
 
 --game-update------------------------------------------------------------------------------------------
@@ -120,9 +123,19 @@ end
 
 function level_draw()
  cls()
- rect(0,0,127,127,8) --border
- print('lives:'..player.lives, 90, 120, 7)
- print('wave:'..wave, 8, 120, 7)
+ rect(0,0,127,127,7) --border
+ 
+ line(0,117,127,117,7) -- console border
+ print('this is mission control', 2, 120, 7)
+ if time() > dialogue_blinker_start_time then
+  print('>', 122, 120, 7)
+  if time() > dialogue_blinker_start_time + dialogue_blinker_increment_time then
+   dialogue_blinker_start_time += dialogue_blinker_increment_time + 1
+  end
+ end
+
+ -- print('lives:'..player.lives, 90, 120, 7)
+ -- print('wave:'..wave, 8, 120, 7)
  
  spr(player.sprite,player.x,player.y)
 

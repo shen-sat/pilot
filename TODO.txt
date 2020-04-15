@@ -1,13 +1,14 @@
-Get message to dissappear after last barrier crosses over it
-Replace barriers with walls from Porklike
-Intro - text from A Softer World
+Dialogue boxes from mission control
 Win state
 	- text from mission control
 	- ability to hyper jump
+Sound
+Intro - text from A Softer World
 Title screen
-
 
 -- DONE
 Get messages to shimmer
 Messages should exist behind barriers
 Messages should progress to next statement every wave
+Get message to dissappear after last barrier crosses over it
+Get message to dissappear after last barrier crosses over it
