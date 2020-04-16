@@ -83,7 +83,18 @@ function run_level()
 	game.draw = level_draw
 
  dialogue_blinker_start_time = 0
- dialogue_blinker_increment_time = 1
+ dialogue_blinker_stop_time = 0
+ hq_start_dialogue_lines = {
+  'this is hq speaking.',
+  'before your mission...',
+  '...you must pass this test.',
+  'avoid the walls.',
+  'good luck.'
+ }
+ hq_start_dialogue_index = 1
+ hq_start_dialogue_start_time = 0
+ hq_start_show_dialogue = true
+ blinking = true
 end
 
 --game-update------------------------------------------------------------------------------------------
@@ -97,6 +108,8 @@ function level_update()
 	if btn(0) then player.x-=3 end
  if btn(1) then player.x+=3 end
  
+ if btnp(5) then hq_start_dialogue_index += 1 end
+ 
  create_barriers()
 
  move_walls()
@@ -106,6 +119,8 @@ function level_update()
  manage_messages()
 
  check_difficulty_and_reset_wave()
+
+ manage_hq_start_dialogue()
 
  -- check_player_hit()
 
@@ -124,18 +139,9 @@ end
 function level_draw()
  cls()
  rect(0,0,127,127,7) --border
- 
  line(0,117,127,117,7) -- console border
- print('this is mission control', 2, 120, 7)
- if time() > dialogue_blinker_start_time then
-  print('>', 122, 120, 7)
-  if time() > dialogue_blinker_start_time + dialogue_blinker_increment_time then
-   dialogue_blinker_start_time += dialogue_blinker_increment_time + 1
-  end
- end
-
- -- print('lives:'..player.lives, 90, 120, 7)
- -- print('wave:'..wave, 8, 120, 7)
+ 
+ display_hq_start_dialogue()
  
  spr(player.sprite,player.x,player.y)
 
@@ -152,6 +158,34 @@ end
 --game-functions------------------------------------------------------------------------------------------
 --game-functions------------------------------------------------------------------------------------------
 --game-functions------------------------------------------------------------------------------------------
+
+function manage_hq_start_dialogue()
+ if hq_start_dialogue_index > #hq_start_dialogue_lines then hq_start_show_dialogue = false end
+end
+
+function display_hq_start_dialogue()
+ if hq_start_show_dialogue then
+  print(hq_start_dialogue_lines[hq_start_dialogue_index], 2, 120, 7)
+  display_blinker()
+ else
+  print('wave:'..wave, 8, 120, 7)
+  print('lives:'..player.lives, 90, 120, 7)
+ end
+end
+
+function display_blinker()
+ if time() > dialogue_blinker_start_time then
+  print('>', 122, 120, 7)
+  if blinking then
+   blinking = false
+   dialogue_blinker_stop_time = time() + 1
+  end
+  if time() > dialogue_blinker_stop_time then
+   blinking = true
+   dialogue_blinker_start_time = dialogue_blinker_stop_time + 1
+  end
+ end
+end
 
 function display_messages()
  if message_on == false then
