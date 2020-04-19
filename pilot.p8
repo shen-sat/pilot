@@ -95,6 +95,10 @@ function run_level()
  hq_start_dialogue_start_time = 0
  hq_start_show_dialogue = true
  blinking = true
+
+ stars = {}
+ initial_stars()
+ generate_star_time = 0
 end
 
 --game-update------------------------------------------------------------------------------------------
@@ -109,6 +113,9 @@ function level_update()
  if btn(1) then player.x+=3 end
  
  if btnp(5) then hq_start_dialogue_index += 1 end
+ generate_stars()
+
+ move_stars()
  
  create_barriers()
 
@@ -150,6 +157,10 @@ function level_draw()
  for wall in all(walls) do
   rectfill(wall.x,wall.y,wall.x + wall.width - 1,wall.y + wall.height - 1,wall.col)
  end
+
+ for star in all(stars) do
+  pset(star.x, star.y, 7)
+ end
 end
 
 --game-functions------------------------------------------------------------------------------------------
@@ -158,6 +169,45 @@ end
 --game-functions------------------------------------------------------------------------------------------
 --game-functions------------------------------------------------------------------------------------------
 --game-functions------------------------------------------------------------------------------------------
+function generate_stars()
+ if time() > generate_star_time then
+  star = {
+   x = flr(rnd(128)),
+   y = -1
+  }
+  add(stars, star)
+  generate_star_time = time() + 0.1
+ end
+end
+
+function move_stars()
+ for star in all(stars) do
+   star.y += 1
+   if star.y > 138 then
+    del(stars, star)
+   end
+ end
+end
+
+
+function initial_stars()
+ my_arr = {}
+ for i=0,127 do
+  add(my_arr, i)
+ end
+
+ for i=1,10 do
+  point_x = flr(rnd(128))
+  point_y = flr(rnd(128))
+  -- del(my_arr, point_x)
+  -- del(my_arr, point_y)
+  star = {
+   x = point_x,
+   y = point_y
+  }
+  add(stars, star)
+ end
+end
 
 function manage_hq_start_dialogue()
  if hq_start_dialogue_index > #hq_start_dialogue_lines then hq_start_show_dialogue = false end
@@ -345,7 +395,7 @@ function increase_message_color_index()
 end
 
 function check_win()
- if wave > 0 then
+ if wave > 1 then
   run_win()
  end
 end
@@ -390,6 +440,8 @@ function win_draw()
   print('win!', 90, 90, 7)
   rect(0,0,127,127,7) -- border
   line(0,117,127,117,7) -- console border
+
+  spr(player.sprite,player.x,player.y)
 
   display_hq_win_dialogue()
   if btnp(5) then hq_win_dialogue_index += 1 end

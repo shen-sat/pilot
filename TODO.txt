@@ -1,7 +1,11 @@
-Dialogue boxes from mission control
-Win state
-	- text from mission control
-	- ability to hyper jump
+Stars
+	- start with stars
+	- scroll all stars
+	- generate stars from off screen 
+Ability to hyper jump
+Flicker effect
+	- Last 3 barriers flicker more and more until constant
+	- Flick back to normal colours in run_win()
 Sound
 Intro - text from A Softer World
 Title screen
@@ -12,3 +16,4 @@ Messages should exist behind barriers
 Messages should progress to next statement every wave
 Get message to dissappear after last barrier crosses over it
 Get message to dissappear after last barrier crosses over it
+Dialogue boxes from mission control
