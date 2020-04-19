@@ -24,7 +24,7 @@ function show_menu()
 end
 
 function menu_update()
-	if btnp(5) then run_level() end
+ if btnp(5) then run_level() end
 end
 
 function menu_draw()
@@ -345,9 +345,8 @@ function increase_message_color_index()
 end
 
 function check_win()
- if wave > 1 then
-  game.update = win_update
-  game.draw = win_draw
+ if wave > 0 then
+  run_win()
  end
 end
 
@@ -362,12 +361,51 @@ end
 --win------------------------------------------------------------------------------------------
 --win------------------------------------------------------------------------------------------
 
+function run_win()
+ game.update = win_update
+ game.draw = win_draw
+
+ hq_win_dialogue_lines = {
+  'congratulations.',
+  'you have passed.',
+  'you can hyperjump...',
+  '...and return to base...',
+  '...by pressing z.'
+ }
+
+ hq_win_show_dialogue = true
+ hq_win_dialogue_index = 1
+ -- hq_win_dialogue_start_time = 0
+ blinking = true
+end
+
 function win_update()
+
+manage_hq_win_dialogue()
+
 end
 
 function win_draw()
   cls()
   print('win!', 90, 90, 7)
+  rect(0,0,127,127,7) -- border
+  line(0,117,127,117,7) -- console border
+
+  display_hq_win_dialogue()
+  if btnp(5) then hq_win_dialogue_index += 1 end
+end
+
+function display_hq_win_dialogue()
+ if hq_win_show_dialogue then
+  print(hq_win_dialogue_lines[hq_win_dialogue_index], 2, 120, 7)
+  display_blinker()
+ else
+  print(hq_win_dialogue_lines[5], 2, 120, 7)
+ end
+end
+
+function manage_hq_win_dialogue()
+ if hq_win_dialogue_index == #hq_win_dialogue_lines then hq_win_show_dialogue = false end
 end
 
 --game-over------------------------------------------------------------------------------------------
