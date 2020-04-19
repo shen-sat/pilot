@@ -1,8 +1,10 @@
-Stars
-	- start with stars
-	- scroll all stars
-	- generate stars from off screen 
 Ability to hyper jump
+	- on btn press get stars to light up
+	- on btn press get stars to speed up slightly
+	- on btn press get stars to elongate slightly
+	- after half sec get stars to elongate further
+	- after half sec get stars to speed up again
+	- after half a sec get stars to fill up screen
 Flicker effect
 	- Last 3 barriers flicker more and more until constant
 	- Flick back to normal colours in run_win()
@@ -17,3 +19,7 @@ Messages should progress to next statement every wave
 Get message to dissappear after last barrier crosses over it
 Get message to dissappear after last barrier crosses over it
 Dialogue boxes from mission control
+Stars
+	- start with stars
+	- scroll all stars
+	- generate stars from off screen

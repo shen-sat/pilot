@@ -430,6 +430,9 @@ function run_win()
 end
 
 function win_update()
+generate_stars()
+
+move_stars()
 
 manage_hq_win_dialogue()
 
@@ -445,6 +448,10 @@ function win_draw()
 
   display_hq_win_dialogue()
   if btnp(5) then hq_win_dialogue_index += 1 end
+
+  for star in all(stars) do
+   pset(star.x, star.y, 7)
+  end
 end
 
 function display_hq_win_dialogue()
