@@ -473,7 +473,22 @@ function win_draw()
   rect(0,0,127,127,7) -- border
   line(0,117,127,117,7) -- console border
 
-  spr(player.sprite,player.x,player.y)
+  if hyperjump then
+   if time() > hyperjump_time + 4 then
+    num_x = flr(rnd(5)) + (player.x - 1)
+    num_y = flr(rnd(4)) + (player.y - 1)
+    spr(player.sprite,num_x,num_y)
+   elseif time() > hyperjump_time + 2 then
+    num_x = flr(rnd(3)) + (player.x - 1)
+    num_y = flr(rnd(3)) + (player.y - 1)
+    spr(player.sprite,num_x,num_y)
+   else
+    spr(player.sprite,player.x,player.y)
+   end
+  else
+   spr(player.sprite,player.x,player.y)
+  end
+  
 
   display_hq_win_dialogue()
   
