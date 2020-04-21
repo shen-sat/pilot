@@ -448,9 +448,12 @@ function run_win()
 
  hyperjump = false
  hyperjump_time = 0
+ x_shake = 0
+ y_shake = 0
 end
 
 function win_update()
+ calculate_shake()
 
  if btn(4) and hyperjump == false then 
   hyperjump = true
@@ -471,22 +474,34 @@ function win_draw()
   cls()
   print('win!', 90, 90, 7)
   rect(0,0,127,127,7) -- border
-  line(0,117,127,117,7) -- console border
+  
+
+  
 
   if hyperjump then
    if time() > hyperjump_time + 4 then
-    num_x = flr(rnd(5)) + (player.x - 1)
-    num_y = flr(rnd(4)) + (player.y - 1)
+    num_x = x_shake + (player.x - 1)
+    num_y = y_shake + (player.y - 1)
     spr(player.sprite,num_x,num_y)
+
+    border_y = 117
+    border_num_y = y_shake + (border_y - 1) 
+    line(0,border_num_y,127,border_num_y,7) -- console border
    elseif time() > hyperjump_time + 2 then
-    num_x = flr(rnd(3)) + (player.x - 1)
-    num_y = flr(rnd(3)) + (player.y - 1)
+    num_x = x_shake + (player.x - 1)
+    num_y = y_shake + (player.y - 1)
     spr(player.sprite,num_x,num_y)
+
+    border_y = 117
+    border_num_y = y_shake + (border_y - 1) 
+    line(0,border_num_y,127,border_num_y,7) -- console border
    else
     spr(player.sprite,player.x,player.y)
+    line(0,117,127,117,7) -- console border
    end
   else
    spr(player.sprite,player.x,player.y)
+   line(0,117,127,117,7) -- console border
   end
   
 
@@ -533,12 +548,40 @@ function win_draw()
 
 end
 
+function calculate_shake()
+ if hyperjump then
+  if time() > hyperjump_time + 4 then
+   x_shake = flr(rnd(5))
+   y_shake = flr(rnd(4))
+  elseif time() > hyperjump_time + 2 then
+   x_shake = flr(rnd(3))
+   y_shake = flr(rnd(3))
+  end
+ end
+end
+
 function display_hq_win_dialogue()
  if hq_win_show_dialogue then
   print(hq_win_dialogue_lines[hq_win_dialogue_index], 2, 120, 7)
   display_blinker()
  else
-  print(hq_win_dialogue_lines[5], 2, 120, 7)
+  if hyperjump then
+   dialogue_x = 2
+   dialogue_y = 120
+   if time() > hyperjump_time + 4 then
+    num_x = x_shake + (dialogue_x - 1)
+    num_y = y_shake + (dialogue_y - 1)
+    print(hq_win_dialogue_lines[5], num_x, num_y, 7)
+   elseif time() > hyperjump_time + 2 then
+    num_x = x_shake + (dialogue_x - 1)
+    num_y = y_shake + (dialogue_y - 1)
+    print(hq_win_dialogue_lines[5], num_x, num_y, 7)
+   else
+    print(hq_win_dialogue_lines[5], 2, 120, 7)
+   end
+  else
+   print(hq_win_dialogue_lines[5], 2, 120, 7)
+  end
  end
 end
 
