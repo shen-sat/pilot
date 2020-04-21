@@ -159,7 +159,7 @@ function level_draw()
  end
 
  for star in all(stars) do
-  pset(star.x, star.y, 7)
+  pset(star.x, star.y, 1)
  end
 end
 
@@ -176,13 +176,31 @@ function generate_stars()
    y = -1
   }
   add(stars, star)
-  generate_star_time = time() + 0.1
+  if hyperjump then
+   if time() > hyperjump_time + 4 then
+    generate_star_time = time() + 0.04
+   else
+    generate_star_time = time() + 0.05
+   end
+  else 
+   generate_star_time = time() + 0.1
+  end
  end
 end
 
 function move_stars()
  for star in all(stars) do
-   star.y += 1
+   if hyperjump then
+    if time() > hyperjump_time + 4 then
+     star.y += 10
+    elseif time() > hyperjump_time + 2 then
+     star.y += 5
+    else
+     star.y += 2
+    end
+   else
+    star.y += 1
+   end
    if star.y > 138 then
     del(stars, star)
    end
@@ -395,7 +413,7 @@ function increase_message_color_index()
 end
 
 function check_win()
- if wave > 1 then
+ if wave > 0 then
   run_win()
  end
 end
@@ -427,14 +445,25 @@ function run_win()
  hq_win_dialogue_index = 1
  -- hq_win_dialogue_start_time = 0
  blinking = true
+
+ hyperjump = false
+ hyperjump_time = 0
 end
 
 function win_update()
-generate_stars()
 
-move_stars()
+ if btn(4) and hyperjump == false then 
+  hyperjump = true
+  hyperjump_time = time()
+ end
 
-manage_hq_win_dialogue()
+ generate_stars()
+
+ move_stars()
+
+ manage_hq_win_dialogue()
+
+
 
 end
 
@@ -447,11 +476,46 @@ function win_draw()
   spr(player.sprite,player.x,player.y)
 
   display_hq_win_dialogue()
+  
   if btnp(5) then hq_win_dialogue_index += 1 end
 
   for star in all(stars) do
-   pset(star.x, star.y, 7)
+   if hyperjump then
+    if time() > hyperjump_time + 4 then
+     pset(star.x, star.y - 15, 1)
+     pset(star.x, star.y - 14, 1)
+     pset(star.x, star.y - 13, 1)
+     pset(star.x, star.y - 12, 1)
+     pset(star.x, star.y - 11, 1)
+     pset(star.x, star.y - 10, 1)
+     pset(star.x, star.y - 9, 1)
+     pset(star.x, star.y - 8, 1)
+     pset(star.x, star.y - 7, 1)
+     pset(star.x, star.y - 6, 1)
+     pset(star.x, star.y - 5, 1)
+     pset(star.x, star.y - 4, 1)
+     pset(star.x, star.y - 3, 1)
+     pset(star.x, star.y - 2, 1)
+     pset(star.x, star.y - 1, 12)
+     pset(star.x, star.y, 7)
+    elseif time() > hyperjump_time + 2 then
+     pset(star.x, star.y - 6, 1)
+     pset(star.x, star.y - 5, 1)
+     pset(star.x, star.y - 4, 1)
+     pset(star.x, star.y - 3, 1)
+     pset(star.x, star.y - 2, 1)
+     pset(star.x, star.y - 1, 12)
+     pset(star.x, star.y, 7)
+    else
+     pset(star.x, star.y - 2, 1)
+     pset(star.x, star.y - 1, 12)
+     pset(star.x, star.y, 7)
+    end
+   else  
+    pset(star.x, star.y, 1)
+   end
   end
+
 end
 
 function display_hq_win_dialogue()
