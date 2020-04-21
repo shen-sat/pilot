@@ -455,7 +455,7 @@ end
 function win_update()
  calculate_shake()
 
- if btn(4) and hyperjump == false then 
+ if btn(4) and hyperjump == false and hq_win_show_dialogue == false then 
   hyperjump = true
   hyperjump_time = time()
  end
