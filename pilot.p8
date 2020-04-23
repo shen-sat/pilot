@@ -99,6 +99,13 @@ function run_level()
  stars = {}
  initial_stars()
  generate_star_time = 0
+
+ switch_color = true
+ switch_time_start = 0
+ switch_time_end = 0
+ switch_time_on_lengths = { 0.05, 0.2, 0.05, 20 }
+ switch_time_off_lengths = { 1.5, 0.2, 0.2, 0 }
+ switch_time_lengths_index = 1
 end
 
 --game-update------------------------------------------------------------------------------------------
@@ -109,6 +116,7 @@ end
 --game-update------------------------------------------------------------------------------------------
 
 function level_update()
+
 	if btn(0) then player.x-=3 end
  if btn(1) then player.x+=3 end
  
@@ -134,6 +142,9 @@ function level_update()
  check_player_lives()
 
  check_win()
+
+ if (wave > 3) and (difficulty > 4) then do_flicker = true end
+
 end
 
 --game-draw------------------------------------------------------------------------------------------
@@ -145,6 +156,7 @@ end
 
 function level_draw()
  cls()
+ rectfill(0,0,127,127,0) -- background
  rect(0,0,127,127,7) --border
  line(0,117,127,117,7) -- console border
  
@@ -161,6 +173,9 @@ function level_draw()
  for star in all(stars) do
   pset(star.x, star.y, 1)
  end
+
+if do_flicker then start_flicker() end
+
 end
 
 --game-functions------------------------------------------------------------------------------------------
@@ -169,6 +184,24 @@ end
 --game-functions------------------------------------------------------------------------------------------
 --game-functions------------------------------------------------------------------------------------------
 --game-functions------------------------------------------------------------------------------------------
+function start_flicker()
+ pal()
+ if time() > switch_time_start then
+  pal(0,7)
+  pal(7,0)
+  spr(player.sprite,60,30)
+  if switch_color then
+   switch_color = false
+   switch_time_end = time() + switch_time_on_lengths[switch_time_lengths_index]
+  end
+  if time() > switch_time_end then
+   switch_color = true
+   switch_time_start = time() + switch_time_off_lengths[switch_time_lengths_index]
+   switch_time_lengths_index += 1
+  end
+ end
+end
+
 function generate_stars()
  if time() > generate_star_time then
   star = {
@@ -217,8 +250,6 @@ function initial_stars()
  for i=1,10 do
   point_x = flr(rnd(128))
   point_y = flr(rnd(128))
-  -- del(my_arr, point_x)
-  -- del(my_arr, point_y)
   star = {
    x = point_x,
    y = point_y
@@ -296,7 +327,7 @@ function create_barrier()
   y = 0,
   width = wall_one_width,
   height = 5,
-  col = 3,
+  col = 7,
   start = time() + barrier_time_pause
  }
  wall_two = {
@@ -304,7 +335,7 @@ function create_barrier()
   y = 1,
   width = wall_two_width,
   height = 5,
-  col = 3,
+  col = 7,
   start = time() + barrier_time_pause
  }
  add(walls, wall_one)
@@ -413,7 +444,7 @@ function increase_message_color_index()
 end
 
 function check_win()
- if wave > 0 then
+ if wave > 4 then
   run_win()
  end
 end
@@ -443,7 +474,7 @@ function run_win()
 
  hq_win_show_dialogue = true
  hq_win_dialogue_index = 1
- -- hq_win_dialogue_start_time = 0
+
  blinking = true
 
  hyperjump = false
@@ -465,18 +496,13 @@ function win_update()
  move_stars()
 
  manage_hq_win_dialogue()
-
-
-
 end
 
 function win_draw()
+  pal()
   cls()
-  print('win!', 90, 90, 7)
+  print('end!', 90, 90, 7)
   rect(0,0,127,127,7) -- border
-  
-
-  
 
   if hyperjump then
    if time() > hyperjump_time + 4 then
@@ -512,33 +538,33 @@ function win_draw()
   for star in all(stars) do
    if hyperjump then
     if time() > hyperjump_time + 4 then
-     pset(star.x, star.y - 15, 1)
-     pset(star.x, star.y - 14, 1)
-     pset(star.x, star.y - 13, 1)
-     pset(star.x, star.y - 12, 1)
-     pset(star.x, star.y - 11, 1)
-     pset(star.x, star.y - 10, 1)
-     pset(star.x, star.y - 9, 1)
-     pset(star.x, star.y - 8, 1)
-     pset(star.x, star.y - 7, 1)
-     pset(star.x, star.y - 6, 1)
-     pset(star.x, star.y - 5, 1)
-     pset(star.x, star.y - 4, 1)
-     pset(star.x, star.y - 3, 1)
-     pset(star.x, star.y - 2, 1)
+     pset(star.x, star.y - 15, 7)
+     pset(star.x, star.y - 14, 7)
+     pset(star.x, star.y - 13, 7)
+     pset(star.x, star.y - 12, 7)
+     pset(star.x, star.y - 11, 7)
+     pset(star.x, star.y - 10, 7)
+     pset(star.x, star.y - 9, 7)
+     pset(star.x, star.y - 8, 7)
+     pset(star.x, star.y - 7, 7)
+     pset(star.x, star.y - 6, 7)
+     pset(star.x, star.y - 5, 7)
+     pset(star.x, star.y - 4, 7)
+     pset(star.x, star.y - 3, 7)
+     pset(star.x, star.y - 2, 7)
      pset(star.x, star.y - 1, 12)
      pset(star.x, star.y, 7)
     elseif time() > hyperjump_time + 2 then
-     pset(star.x, star.y - 6, 1)
-     pset(star.x, star.y - 5, 1)
-     pset(star.x, star.y - 4, 1)
-     pset(star.x, star.y - 3, 1)
-     pset(star.x, star.y - 2, 1)
-     pset(star.x, star.y - 1, 12)
+     pset(star.x, star.y - 6, 7)
+     pset(star.x, star.y - 5, 7)
+     pset(star.x, star.y - 4, 7)
+     pset(star.x, star.y - 3, 7)
+     pset(star.x, star.y - 2, 7)
+     pset(star.x, star.y - 1, 7)
      pset(star.x, star.y, 7)
     else
-     pset(star.x, star.y - 2, 1)
-     pset(star.x, star.y - 1, 12)
+     pset(star.x, star.y - 2, 7)
+     pset(star.x, star.y - 1, 7)
      pset(star.x, star.y, 7)
     end
    else  
@@ -610,13 +636,13 @@ function game_over_draw()
  print('press z to go to menu')
 end
 __gfx__
-000dd000000000000b3000298028013009a002e1d101000b33000000029900013006100000000000000000000000000000000000000000000000000000000000
-0d17c150000dd000b300029a228e03b09aa02ef0160c00bbb0030002999a0013b00d6100001ddddd0dddddddddddddddddddd511001ddddd0ddddddddddddddd
-dd27c1550017c1d033bb0499088813b49190effd1d6c103bb00b30299aaa013bb000d6d601d7777d077777777777677777776d5001d777770777777777776777
-d6dcc1d50557c2dd0b1b041402021239a9a0f1e6d661c10330bb3099a9aa0333bd100d660d77666d0666666666666666666666501d7766660666666666666666
-d6d511d505dcc26d0b8b02492812013a90a02ef612dc0c010bbbb29aaa9913bb3ddd16d60d766ddd0dddddddddddddddddddddd01d766ddd0ddddddddddddddd
-1d5dd55105d5216d3b330000880831090000e1f6166cc000bb1b399aaaaa333bb16ddd210d76dd11011111313b3bbbbbbbbb3b301d76dd110111111111111111
-01100110015dd5d1b1000940820030049040e1e1d10cc1003b11b44009aa3213b66106220d76d1110000000000000000000000001db6d1110000000000000000
+00077000000000000b3000298028013009a002e1d101000b33000000029900013006100000000000000000000000000000000000000000000000000000000000
+07077070000dd000b300029a228e03b09aa02ef0160c00bbb0030002999a0013b00d6100001ddddd0dddddddddddddddddddd511001ddddd0ddddddddddddddd
+777007770017c1d033bb0499088813b49190effd1d6c103bb00b30299aaa013bb000d6d601d7777d077777777777677777776d5001d777770777777777776777
+777007770557c2dd0b1b041402021239a9a0f1e6d661c10330bb3099a9aa0333bd100d660d77666d0666666666666666666666501d7766660666666666666666
+7777777705dcc26d0b8b02492812013a90a02ef612dc0c010bbbb29aaa9913bb3ddd16d60d766ddd0dddddddddddddddddddddd01d766ddd0ddddddddddddddd
+7777777705d5216d3b330000880831090000e1f6166cc000bb1b399aaaaa333bb16ddd210d76dd11011111313b3bbbbbbbbb3b301d76dd110111111111111111
+07700770015dd5d1b1000940820030049040e1e1d10cc1003b11b44009aa3213b66106220d76d1110000000000000000000000001db6d1110000000000000000
 00000000001001103bb004202820130040002e201d0c100033b8b441809a128136600d660d76d1100000000000000000000000001d76d1100000000000000000
 1771707707c00aa0b30000290028013009a002e1d1000101033bb494114411221666d100000000000666d6d00666d6d00666d6d0001000000666d6d000000000
 9a79b0bb0cc007a0b300029a228e03b09aa02ef01600c003b0311249449913b33d66d0000076d110677111dd677111dd677111dd13b6d110677000dd0000dda0
