@@ -1,8 +1,6 @@
-Change all colours to black and white
-Flicker effect
-	- Last 3 barriers flicker more and more until constant
-	- Flick back to normal colours in run_win()
-Sound
+Make barriers start only after text has finished
+Make gaps bigger
+Bigger pause in between waves
 Intro - text from A Softer World
 Title screen
 
@@ -18,3 +16,8 @@ Stars
 	- scroll all stars
 	- generate stars from off screen
 Ability to hyperjump
+Change all colours to black and white
+Flicker effect
+	- Last 3 barriers flicker more and more until constant
+	- Flick back to normal colours in run_win()
+Sound

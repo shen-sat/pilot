@@ -143,7 +143,7 @@ function level_update()
 
  check_win()
 
- if (wave > 0) and (difficulty > 0) then do_flicker = true end
+ if (wave > 3) and (difficulty > 4) then do_flicker = true end
 
 end
 
@@ -189,12 +189,14 @@ function start_flicker()
  if time() > switch_time_start then
   pal(0,7)
   pal(7,0)
+  sfx(4)
   sspr(8,0,32,24,49,30)
   if switch_color then
    switch_color = false
    switch_time_end = time() + switch_time_on_lengths[switch_time_lengths_index]
   end
   if time() > switch_time_end then
+   sfx(4, -2)
    switch_color = true
    switch_time_start = time() + switch_time_off_lengths[switch_time_lengths_index]
    switch_time_lengths_index += 1
@@ -448,8 +450,9 @@ function increase_message_color_index()
 end
 
 function check_win()
- if wave > 0 then
+ if wave > 4 then
   run_win()
+  sfx(0, -2)
  end
 end
 
@@ -467,6 +470,8 @@ end
 function run_win()
  game.update = win_update
  game.draw = win_draw
+
+ sfx(4, -2)
 
  hq_win_dialogue_lines = {
   'congratulations.',
@@ -677,3 +682,4 @@ __sfx__
 001000010055000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 001000010855000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 001000011355000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+001000010561000600006000760013600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
