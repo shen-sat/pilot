@@ -24,7 +24,7 @@ function show_menu()
 end
 
 function menu_update()
- if btnp(5) then run_level() end
+ if btnp(5) then run_intro_level() end
 end
 
 function menu_draw()
@@ -36,6 +36,75 @@ function menu_draw()
  print('avoid the walls')
  print('\n')
 	print('press x to start')
+end
+
+function run_intro_level()
+ game.update = intro_level_update
+ game.draw = intro_level_draw
+
+ player = {
+  x = 60,
+  y = 100,
+  width = 8,
+  height = 7,
+  sprite = 0,
+  lives = 1,
+  hit = false,
+  hittable = true,
+  recovery_time = 3
+ }
+
+ stars = {}
+ initial_stars()
+ generate_star_time = 0
+
+ hq_start_dialogue_lines = {
+  'this is hq speaking.',
+  'before your mission...',
+  '...you must pass this test.',
+  'avoid the walls.',
+  'good luck.'
+ }
+
+ dialogue_blinker_start_time = 0
+ dialogue_blinker_stop_time = 0
+ hq_start_dialogue_index = 1
+ hq_start_dialogue_start_time = 0
+ hq_start_show_dialogue = true
+ blinking = true
+end
+
+function intro_level_update()
+ if hq_start_dialogue_index > #hq_start_dialogue_lines then
+  run_level()
+ end
+
+ if btnp(5) then 
+  hq_start_dialogue_index += 1
+ end
+
+ generate_stars()
+
+ move_stars()
+
+ manage_hq_start_dialogue()
+
+end
+
+function intro_level_draw()
+ cls()
+ rectfill(0,0,127,127,0) -- background
+ rect(0,0,127,127,7) --border
+ line(0,117,127,117,7) -- console border
+
+ display_hq_start_dialogue()
+
+ spr(player.sprite,player.x,player.y)
+
+ for star in all(stars) do
+  pset(star.x, star.y, 1)
+ end
+
 end
 --game------------------------------------------------------------------------------------------
 --game------------------------------------------------------------------------------------------
@@ -84,20 +153,13 @@ function run_level()
 
  dialogue_blinker_start_time = 0
  dialogue_blinker_stop_time = 0
- hq_start_dialogue_lines = {
-  'this is hq speaking.',
-  'before your mission...',
-  '...you must pass this test.',
-  'avoid the walls.',
-  'good luck.'
- }
  hq_start_dialogue_index = 1
  hq_start_dialogue_start_time = 0
  hq_start_show_dialogue = true
  blinking = true
 
- stars = {}
- initial_stars()
+ -- stars = {}
+ -- initial_stars()
  generate_star_time = 0
 
  switch_color = true
@@ -135,7 +197,7 @@ function level_update()
 
  check_difficulty_and_reset_wave()
 
- manage_hq_start_dialogue()
+ 
 
  -- check_player_hit()
 
@@ -160,9 +222,10 @@ function level_draw()
  rect(0,0,127,127,7) --border
  line(0,117,127,117,7) -- console border
  
- display_hq_start_dialogue()
- 
  spr(player.sprite,player.x,player.y)
+
+ print('wave:'..wave, 8, 120, 7)
+ print('lives:'..player.lives, 90, 120, 7)
 
  display_messages()
  
@@ -271,9 +334,6 @@ function display_hq_start_dialogue()
  if hq_start_show_dialogue then
   print(hq_start_dialogue_lines[hq_start_dialogue_index], 2, 120, 7)
   display_blinker()
- else
-  print('wave:'..wave, 8, 120, 7)
-  print('lives:'..player.lives, 90, 120, 7)
  end
 end
 
