@@ -130,7 +130,7 @@ function run_level()
  barrier_time_modifier_original = 2.5
  barrier_time_pause = 1
  barrier_counter = 0
- wall_gap = 25
+ wall_gap = 35
  difficulty = 0
  wave = 1
  prev_wave = wave

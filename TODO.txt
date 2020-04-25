@@ -1,8 +1,6 @@
-Make barriers start only after text has finished
-Make gaps bigger
-Bigger pause in between waves
+When player dies, make sure it starts from run_level
+Remove 'End!' form screen
 Intro - text from A Softer World
-Title screen
 
 -- DONE
 Get messages to shimmer
@@ -21,3 +19,5 @@ Flicker effect
 	- Last 3 barriers flicker more and more until constant
 	- Flick back to normal colours in run_win()
 Sound
+Make barriers start only after text has finished
+Make gaps bigger
