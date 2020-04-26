@@ -21,21 +21,31 @@ end
 function show_menu()
 	game.update = menu_update
 	game.draw = menu_draw
+
+ dialogue_blinker_start_time = 0
+ dialogue_blinker_stop_time = 0
+ blinking = true
+ softer_world_flag = true
 end
 
 function menu_update()
- if btnp(5) then run_intro_level() end
+ if btnp(5) then
+  softer_world_flag = false
+  run_intro_level() 
+ end
 end
 
 function menu_draw()
 	cls()
- color(3)
- print('welcome to: the pilot')
- print('\n')
- print('press <- and -> to move')
- print('avoid the walls')
- print('\n')
-	print('press x to start')
+  
+  print("i'm afraid of this mission.")
+  print("i'm scared of what's out there.")
+  print("\nbut when i tried...")
+  print("...to tell my mother...")
+  print("...she smiled so wide and said:")
+  print(  "\n'my son, the pilot'.")
+
+  display_blinker()
 end
 
 function run_intro_level()
@@ -339,7 +349,11 @@ end
 
 function display_blinker()
  if time() > dialogue_blinker_start_time then
-  print('>', 122, 120, 7)
+  if softer_world_flag then
+   print('press x to advance >', 46, 120, 7)
+  else
+   print('>', 122, 120, 7)
+  end
   if blinking then
    blinking = false
    dialogue_blinker_stop_time = time() + 1

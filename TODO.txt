@@ -1,6 +1,7 @@
-When player dies, make sure it starts from run_level
-Remove 'End!' form screen
 Intro - text from A Softer World
+When player dies, make sure it starts from run_level
+Remove 'End!' from screen
+
 
 -- DONE
 Get messages to shimmer
