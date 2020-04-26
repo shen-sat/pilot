@@ -37,15 +37,16 @@ end
 
 function menu_draw()
 	cls()
+ color(12)
   
-  print("i'm afraid of this mission.")
-  print("i'm scared of what's out there.")
-  print("\nbut when i tried...")
-  print("...to tell my mother...")
-  print("...she smiled so wide and said:")
-  print(  "\n'my son, the pilot'.")
+ print("i'm afraid of this mission.")
+ print("i'm scared of what's out there.")
+ print("\nbut when i tried")
+ print("to tell my mother")
+ print("she smiled so wide and said:")
+ print(  "\n'my son, the pilot'.")
 
-  display_blinker()
+ display_blinker()
 end
 
 function run_intro_level()
@@ -229,6 +230,11 @@ end
 function level_draw()
  cls()
  rectfill(0,0,127,127,0) -- background
+ 
+ for star in all(stars) do
+  pset(star.x, star.y, 1)
+ end
+ 
  rect(0,0,127,127,7) --border
  line(0,117,127,117,7) -- console border
  
@@ -241,10 +247,6 @@ function level_draw()
  
  for wall in all(walls) do
   rectfill(wall.x,wall.y,wall.x + wall.width - 1,wall.y + wall.height - 1,wall.col)
- end
-
- for star in all(stars) do
-  pset(star.x, star.y, 1)
  end
 
 if do_flicker then start_flicker() end
@@ -524,7 +526,7 @@ function increase_message_color_index()
 end
 
 function check_win()
- if wave > 0 then
+ if wave > 4 then
   run_win()
   sfx(0, -2)
  end
@@ -579,43 +581,15 @@ function win_update()
  move_stars()
 
  manage_hq_win_dialogue()
+
+ if hyperjump and time() > hyperjump_time + 10 then
+   sfx(3, -2)
+ end
 end
 
 function win_draw()
   pal()
   cls()
-  rect(0,0,127,127,7) -- border
-
-  if hyperjump then
-   if time() > hyperjump_time + 4 then
-    num_x = x_shake + (player.x - 1)
-    num_y = y_shake + (player.y - 1)
-    spr(player.sprite,num_x,num_y)
-
-    border_y = 117
-    border_num_y = y_shake + (border_y - 1) 
-    line(0,border_num_y,127,border_num_y,7) -- console border
-   elseif time() > hyperjump_time + 2 then
-    num_x = x_shake + (player.x - 1)
-    num_y = y_shake + (player.y - 1)
-    spr(player.sprite,num_x,num_y)
-
-    border_y = 117
-    border_num_y = y_shake + (border_y - 1) 
-    line(0,border_num_y,127,border_num_y,7) -- console border
-   else
-    spr(player.sprite,player.x,player.y)
-    line(0,117,127,117,7) -- console border
-   end
-  else
-   spr(player.sprite,player.x,player.y)
-   line(0,117,127,117,7) -- console border
-  end
-  
-
-  display_hq_win_dialogue()
-  
-  if btnp(5) then hq_win_dialogue_index += 1 end
 
   for star in all(stars) do
    if hyperjump then
@@ -654,14 +628,49 @@ function win_draw()
    end
   end
 
-  if hyperjump and time() > hyperjump_time + 6 then
+
+  rect(0,0,127,127,7) -- border
+
+  if hyperjump then
+   if time() > hyperjump_time + 4 then
+    num_x = x_shake + (player.x - 1)
+    num_y = y_shake + (player.y - 1)
+    spr(player.sprite,num_x,num_y)
+
+    border_y = 117
+    border_num_y = y_shake + (border_y - 1) 
+    line(0,border_num_y,127,border_num_y,7) -- console border
+   elseif time() > hyperjump_time + 2 then
+    num_x = x_shake + (player.x - 1)
+    num_y = y_shake + (player.y - 1)
+    spr(player.sprite,num_x,num_y)
+
+    border_y = 117
+    border_num_y = y_shake + (border_y - 1) 
+    line(0,border_num_y,127,border_num_y,7) -- console border
+   else
+    spr(player.sprite,player.x,player.y)
+    line(0,117,127,117,7) -- console border
+   end
+  else
+   spr(player.sprite,player.x,player.y)
+   line(0,117,127,117,7) -- console border
+  end
+  
+
+  display_hq_win_dialogue()
+  
+  if btnp(5) then hq_win_dialogue_index += 1 end
+
+  if hyperjump and time() > hyperjump_time + 7 then
     rectfill(0,0,127,127,0)
     num_x = x_shake + (player.x - 1)
     num_y = y_shake + (player.y - 1)
     spr(player.sprite,num_x,num_y)
   end
 
-  if hyperjump and time() > hyperjump_time + 8 then
+  if hyperjump and time() > hyperjump_time + 10 then
+    sfx(3, -2)
     rectfill(0,0,127,127,0)
     color(7)
     print('the pilot.\ncoming soon.', nil, nil, 7)

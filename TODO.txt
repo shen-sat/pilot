@@ -1,7 +1,3 @@
-Move stars to back layer.
-
-
-
 -- DONE
 Get messages to shimmer
 Messages should exist behind barriers
@@ -26,3 +22,4 @@ When player dies, make sure it starts from run_level
 Remove 'End!' from screen.
 Get screen to go blank at the end.
 Print 'The Pilot...coming soon.' at end.
+Move stars to back layer.
