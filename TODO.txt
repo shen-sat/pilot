@@ -1,6 +1,5 @@
-Intro - text from A Softer World
-When player dies, make sure it starts from run_level
 Remove 'End!' from screen
+Print 'The Pilot...coming soon.' at end
 
 
 -- DONE
@@ -22,3 +21,5 @@ Flicker effect
 Sound
 Make barriers start only after text has finished
 Make gaps bigger
+Intro - text from A Softer World
+When player dies, make sure it starts from run_level

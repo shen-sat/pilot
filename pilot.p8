@@ -209,7 +209,7 @@ function level_update()
 
  
 
- -- check_player_hit()
+ check_player_hit()
 
  check_player_lives()
 
@@ -713,9 +713,11 @@ end
 
 function game_over_draw()
 	cls()
-	print('you died! at wave:'..wave)
- print('\n')
- print('press x to restart')
+ color(7)
+
+	print('you died! you reached wave '..wave)
+ print('try to get to wave 5')
+ print('\npress x to restart')
  print('press z to go to menu')
 end
 __gfx__
