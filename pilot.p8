@@ -524,7 +524,7 @@ function increase_message_color_index()
 end
 
 function check_win()
- if wave > 4 then
+ if wave > 0 then
   run_win()
   sfx(0, -2)
  end
@@ -584,7 +584,6 @@ end
 function win_draw()
   pal()
   cls()
-  print('end!', 90, 90, 7)
   rect(0,0,127,127,7) -- border
 
   if hyperjump then
@@ -655,6 +654,18 @@ function win_draw()
    end
   end
 
+  if hyperjump and time() > hyperjump_time + 6 then
+    rectfill(0,0,127,127,0)
+    num_x = x_shake + (player.x - 1)
+    num_y = y_shake + (player.y - 1)
+    spr(player.sprite,num_x,num_y)
+  end
+
+  if hyperjump and time() > hyperjump_time + 8 then
+    rectfill(0,0,127,127,0)
+    color(7)
+    print('the pilot.\ncoming soon.', nil, nil, 7)
+  end
 end
 
 function calculate_shake()

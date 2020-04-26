@@ -1,5 +1,5 @@
-Remove 'End!' from screen
-Print 'The Pilot...coming soon.' at end
+Move stars to back layer.
+
 
 
 -- DONE
@@ -23,3 +23,6 @@ Make barriers start only after text has finished
 Make gaps bigger
 Intro - text from A Softer World
 When player dies, make sure it starts from run_level
+Remove 'End!' from screen.
+Get screen to go blank at the end.
+Print 'The Pilot...coming soon.' at end.
